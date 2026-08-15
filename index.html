@@ -14,8 +14,8 @@
   
   .header{padding:15px; display:flex; justify-content:space-between; align-items:center}
   .logo{display:flex; align-items:center; gap:10px}
-  .logo img{width:45px; height:45px; border-radius:50%; border:2px solid var(--orange)}
-  .logo h1{font-size:18px; color:var(--orange)} .logo p{font-size:11px; color:#777}
+  .logo img{width:45px; height:45px; border-radius:50%; border:2px solid var(--orange); object-fit:cover}
+  .logo h1{font-size:18px; color:var(--orange); font-weight:700} .logo p{font-size:11px; color:#777}
   
   .slider{margin:10px 15px; border-radius:15px; overflow:hidden; height:160px; position:relative}
   .slides{display:flex; transition:transform 0.5s}
@@ -28,20 +28,22 @@
   .card i{background:#FFF1E6; color:var(--orange); padding:10px; border-radius:10px}
   .card small{color:#777}
   
-  .topbar{display:flex; align-items:center; padding:15px; border-bottom:1px solid #eee; background:white; position:sticky; top:0}
-  .topbar h2{flex:1; text-align:center; font-size:18px}
+  .topbar{display:flex; align-items:center; padding:15px; border-bottom:1px solid #eee; background:white; position:sticky; top:0; z-index:10}
+  .topbar h2{flex:1; text-align:center; font-size:18px; font-weight:600}
   
-  .input{padding:15px} .input label{font-size:12px; color:#777}
-  .input input{width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; margin-top:5px}
+  .input{padding:15px 20px} .input label{font-size:12px; color:#777; display:block}
+  .input input{width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; margin-top:5px; outline:none}
   
-  .btn{width:calc(100% - 30px); margin:15px; padding:16px; background:var(--orange); color:white; border:none; border-radius:12px; font-weight:600; font-size:16px; cursor:pointer}
+  .btn{width:calc(100% - 40px); margin:20px; padding:16px; background:var(--orange); color:white; border:none; border-radius:12px; font-weight:600; font-size:16px; cursor:pointer}
+  .btn-outline{width:calc(100% - 40px); margin:0 20px 20px; padding:15px; background:white; color:var(--orange); border:2px solid var(--orange); border-radius:12px; font-weight:600; cursor:pointer}
   
-  .resultat{display:flex; justify-content:space-between; align-items:center; padding:15px; margin:10px 15px; background:white; border-radius:12px; cursor:pointer}
-  .resultat .prix{color:var(--orange); font-weight:700; font-size:18px}
+  .resultat{display:flex; justify-content:space-between; align-items:center; padding:15px; margin:10px 15px; background:white; border-radius:12px; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+  .resultat .prix{color:var(--orange); font-weight:700; font-size:18px; text-align:right}
   
   .nav{position:fixed; bottom:0; width:100%; max-width:420px; background:white; display:flex; justify-content:space-around; padding:8px 0; border-top:1px solid #eee}
   .nav div{text-align:center; font-size:11px; color:#777; cursor:pointer}
   .nav div.active{color:var(--orange)}
+  .billet{background:var(--orange); color:white; margin:20px; padding:20px; border-radius:15px}
 </style>
 </head>
 <body>
@@ -79,37 +81,39 @@
   <div class="input"><label>Ville de départ</label><input id="dep" value="Pointe-Noire"></div>
   <div class="input"><label>Destination</label><input id="dest" value="Yaoundé"></div>
   <div class="input"><label>Date de départ</label><input id="date" type="date"></div>
-  <div class="input"><label>Passagers</label><input value="1 passager"></div>
-  <button class="btn" onclick="cher()">Recher</button>
+  <div class="input"><label>Passagers</label><input id="pass" value="1 passager"></div>
+  <button class="btn" onclick="chercher()">Rechercher</button>
 </div>
 
 <!-- 3 RESULTATS -->
 <div id="resultats" class="screen hidden">
   <div class="topbar"><i data-lucide="arrow-left" onclick="go('reservation')"></i><h2>Résultats</h2></div>
-  <p id="resume" style="padding:15px"></p>
-  <div class="resultat" onclick="go('infos')"><div><img src="sdv_logo.png" style="width:25px"> SDV<br><b>07:00</b> → <b>18:00</b><br><small>Avec hébergement</small></div><div class="prix">76 000<br><small>FCFA</small></div></div>
-  <div class="resultat" onclick="go('infos')"><div><img src="sdv_logo.png" style="width:25px"> SDV<br><b>12:00</b> → <b>23:00</b><br><small>Avec hébergement</small></div><div class="prix">76 000<br><small>FCFA</small></div></div>
-  <button class="btn" onclick="go('infos')">Continuer</button>
+  <p id="resume" style="padding:15px 20px"></p>
+  <div class="resultat" onclick="choisir('07:00','18:00')"><div><img src="sdv_logo.png" style="width:25px"> SDV<br><b>07:00</b> → <b>18:00</b><br><small>Avec hébergement • Sièges: 22</small></div><div class="prix">76 000<br><small>FCFA</small></div></div>
+  <div class="resultat" onclick="choisir('12:00','23:00')"><div><img src="sdv_logo.png" style="width:25px"> SDV<br><b>12:00</b> → <b>23:00</b><br><small>Avec hébergement • Sièges: 18</small></div><div class="prix">76 000<br><small>FCFA</small></div></div>
+  <div class="resultat" onclick="choisir('20:00','07:00')"><div><img src="sdv_logo.png" style="width:25px"> SDV<br><b>20:00</b> → <b>07:00</b><br><small>Avec hébergement • Sièges: 26</small></div><div class="prix">76 000<br><small>FCFA</small></div></div>
 </div>
 
 <!-- 4 INFOS -->
 <div id="infos" class="screen hidden">
   <div class="topbar"><i data-lucide="arrow-left" onclick="go('resultats')"></i><h2>Informations passager</h2></div>
-  <div class="input"><label>Nom et prénom</label><input value="Jean Dupont"></div>
-  <div class="input"><label>Téléphone</label><input value="+242 06 123 45 67"></div>
-  <div class="input"><label>Email</label><input value="jean@email.com"></div>
-  <p style="padding:15px">Total à payer <b style="color:var(--orange)">76 000 FCFA</b></p>
+  <div class="input"><label>Nom et prénom</label><input id="nom" value="Jean Dupont"></div>
+  <div class="input"><label>Numéro de téléphone</label><input id="tel" value="+242 06 123 45 67"></div>
+  <div class="input"><label>Email</label><input id="email" value="jean@email.com"></div>
+  <div class="input"><label>Siège souhaité</label><input id="siege" value="12A"></div>
+  <p style="padding:20px">Total à payer <b id="total" style="color:var(--orange)">76 000 FCFA</b></p>
   <button class="btn" onclick="go('paiement')">Continuer vers le paiement</button>
 </div>
 
 <!-- 5 PAIEMENT -->
 <div id="paiement" class="screen hidden">
   <div class="topbar"><i data-lucide="arrow-left" onclick="go('infos')"></i><h2>Paiement</h2></div>
-  <p style="padding:15px">Choisissez votre méthode de paiement</p>
-  <div class="card"><img src="logo-mtn.png" style="width:30px"> MTN Mobile Money</div>
+  <p style="padding:15px 20px">Choisissez votre méthode de paiement</p>
+  <div class="card"><img src="logo-mtn.png" style="width:30px"> MTN Mobile Money <input type="radio" name="p" checked style="margin-left:auto"></div>
   <div class="input"><label>Numéro Mobile Money</label><input value="+242 06 123 45 67"></div>
-  <div class="card"><img src="logo-airtel.png" style="width:30px"> Airtel Money</div>
-  <button class="btn" onclick="go('succes')">Payer maintenant</button>
+  <div class="card"><img src="logo-airtel.png" style="width:30px"> Airtel Money <input type="radio" name="p" style="margin-left:auto"></div>
+  <div style="padding:15px 20px"><b>Détails:</b><p id="recap"></p><b id="recapTotal">Total 76 000 FCFA</b></div>
+  <button class="btn" onclick="payer()">Payer maintenant</button>
 </div>
 
 <!-- 6 SUCCES -->
@@ -118,34 +122,141 @@
   <div style="text-align:center; padding:40px 20px">
     <i data-lucide="check-circle" style="color:green; width:70px; height:70px"></i>
     <h3>Paiement réussi !</h3>
-    <p>Votre billet a été réservé avec succès.<br>N°: SDV-48291</p>
+    <p>Votre billet a été réservé avec succès.</p>
+    <p id="detailsSucces"></p>
   </div>
-  <button class="btn" onclick="go('accueil')">Retour à l'accueil</button>
+  <button class="btn" onclick="voirBillet()">Voir mon billet</button>
+  <button class="btn-outline" onclick="go('accueil')">Retour à l'accueil</button>
 </div>
 
-<!-- AUTRES PAGES -->
-<div id="suivi" class="screen hidden"><div class="topbar"><i data-lucide="arrow-left" onclick="go('accueil')"></i><h2>Suivre un colis</h2></div><div class="input"><input placeholder="SDV-2026-4829"></div><button class="btn">Rechercher</button></div>
-<div id="expedier" class="screen hidden"><div class="topbar"><i data-lucide="arrow-left" onclick="go('accueil')"></i><h2>Expédier un colis</h2></div><div class="input"><input placeholder="Nom expéditeur"></div><div class="input"><input placeholder="Nom destinataire"></div><button class="btn">Étape suivante</button></div>
-<div id="agences" class="screen hidden"><div class="topbar"><i data-lucide="arrow-left" onclick="go('accueil')"></i><h2>Nos agences</h2></div><div class="card"><i data-lucide="map-pin"></i><div><b>Brazzaville</b><br><small>31 rue Dongou</small></div></div><div class="card"><i data-lucide="map-pin"></i><div><b>Kinshasa</b><br><small>Spehou-Plaza</small></div></div></div>
-<div id="historique" class="screen hidden"><div class="topbar"><h2>Historique</h2></div><div class="card"><div><b>SDV-48291</b><br><small>PNR → YDE</small></div><div style="color:green">Confirmé</div></div></div>
-<div id="contact" class="screen hidden"><div class="topbar"><i data-lucide="arrow-left" onclick="go('accueil')"></i><h2>Contact</h2></div><div class="card"><i data-lucide="phone"></i><div><b>Téléphone</b><br><small>+242 05 208 05 52</small></div></div></div>
+<!-- 7 MON BILLET -->
+<div id="billet" class="screen hidden">
+  <div class="topbar"><i data-lucide="arrow-left" onclick="go('accueil')"></i><h2>Mon billet</h2></div>
+  <div class="billet" id="billetContenu"></div>
+  <button class="btn">Télécharger le billet</button>
+</div>
+
+<!-- 8 SUIVI -->
+<div id="suivi" class="screen hidden">
+  <div class="topbar"><i data-lucide="arrow-left" onclick="go('accueil')"></i><h2>Suivre un colis</h2></div>
+  <div class="input" style="display:flex; gap:10px"><input id="numSuivi" placeholder="SDV-2026-4829"><button class="btn" style="width:auto; margin:0; padding:12px 20px" onclick="chercherColis()">Recher</button></div>
+  <div id="resultatSuivi" style="padding:20px"></div>
+</div>
+
+<!-- 9 EXPEDIER -->
+<div id="expedier" class="screen hidden">
+  <div class="topbar"><i data-lucide="arrow-left" onclick="go('accueil')"></i><h2>Expédier un colis</h2></div>
+  <p style="padding:15px 20px; color:var(--orange)"><b>Expéditeur</b></p>
+  <div class="input"><label>Nom complet</label><input id="expNom"></div>
+  <div class="input"><label>Téléphone</label><input id="expTel"></div>
+  <p style="padding:15px 20px; color:var(--orange)"><b>Destinataire</b></p>
+  <div class="input"><label>Nom complet</label><input id="destNom"></div>
+  <div class="input"><label>Ville de destination</label><input id="destVille"></div>
+  <div class="input"><label>Poids Kg</label><input id="poids" value="5"></div>
+  <button class="btn" onclick="expedier()">Confirmer l'expédition</button>
+</div>
+
+<!-- 10 AGENCES -->
+<div id="agences" class="screen hidden">
+  <div class="topbar"><i data-lucide="arrow-left" onclick="go('accueil')"></i><h2>Nos agences</h2></div>
+  <div class="card"><i data-lucide="map-pin"></i><div><b>Brazzaville</b><br><small>31 rue Dongou, Ouenzé<br>+242 05 208 05 52</small></div></div>
+  <div class="card"><i data-lucide="map-pin"></i><div><b>Kinshasa</b><br><small>Spehou-Plaza, Bandal<br>+243 081 233 39 02</small></div></div>
+  <div class="card"><i data-lucide="map-pin"></i><div><b>Douala</b><br><small>Agence FINEXS, La Douche<br>+237 678 602 390</small></div></div>
+  <div class="card"><i data-lucide="map-pin"></i><div><b>Yaoundé</b><br><small>Agence FINEXS, MVAN<br>+237 654 393 547</small></div></div>
+</div>
+
+<!-- 11 HISTORIQUE -->
+<div id="historique" class="screen hidden">
+  <div class="topbar"><h2>Historique</h2></div>
+  <div id="listeHistorique"></div>
+</div>
+
+<!-- 12 CONTACT -->
+<div id="contact" class="screen hidden">
+  <div class="topbar"><i data-lucide="arrow-left" onclick="go('accueil')"></i><h2>Contactez-nous</h2></div>
+  <div class="card"><i data-lucide="phone"></i><div><b>Téléphone</b><br><small>+242 05 208 05 52</small></div></div>
+  <div class="card"><i data-lucide="mail"></i><div><b>Email</b><br><small>sdv@oufholding.cg</small></div></div>
+</div>
 
 <script>
+let dataTemp = {};
+
+// NAVIGATION
 function go(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
   document.querySelectorAll('.nav div').forEach(n=>n.classList.remove('active'));
   if(id=='accueil')document.querySelector('.nav div').classList.add('active');
+  if(id=='historique')afficherHistorique();
   lucide.createIcons();
 }
-function chercher(){
-  document.getElementById('resume').innerHTML=`<b>${dep.value} → ${dest.value}</b><br><small>${date.value} • 1 passager</small>`;
-  go('resultats');
-}
+
 // SLIDER
 let i=0; for(let j=0;j<8;j++)dots.innerHTML+='<div class="dot"></div>';
 setInterval(()=>{slides.style.transform='translateX('+(-i*100)+'%)';document.querySelectorAll('.dot').forEach((d,k)=>d.classList.toggle('active',k==i));i=(i+1)%8;},4000);
+
+// RESERVATION
+function chercher(){
+  dataTemp={dep:dep.value,dest:dest.value,date:date.value,prix:76000};
+  document.getElementById('resume').innerHTML=`<b>${dataTemp.dep} → ${dataTemp.dest}</b><br><small>${dataTemp.date} • ${pass.value}</small>`;
+  go('resultats');
+}
+function choisir(h1,h2){
+  dataTemp.heure=h1; dataTemp.arrivee=h2;
+  go('infos');
+}
+
+// PAIEMENT + SAUVEGARDE
+function payer(){
+  document.getElementById('recap').innerText=`Trajet: ${dataTemp.dep} → ${dataTemp.dest}\nDate: ${dataTemp.date}`;
+  dataTemp.nom=nom.value; dataTemp.tel=tel.value; dataTemp.email=email.value; dataTemp.siege=siege.value;
+  dataTemp.num='SDV-'+Math.floor(10000+Math.random()*90000); dataTemp.statut='Confirmé'; dataTemp.type='billet';
+  
+  let billets=JSON.parse(localStorage.getItem('sdv_billets'))||[]; billets.push(dataTemp); localStorage.setItem('sdv_billets',JSON.stringify(billets));
+  
+  document.getElementById('detailsSucces').innerHTML=`Montant payé <b>${dataTemp.prix} FCFA</b><br>N° de réservation <b>${dataTemp.num}</b>`;
+  go('succes');
+}
+
+// BILLET
+function voirBillet(){
+  document.getElementById('billetContenu').innerHTML=`
+    <div style="display:flex; justify-content:space-between"><img src="sdv_logo.png" style="width:40px"> <b>SAINT-DENIS VOYAGE</b></div>
+    <div style="display:flex; justify-content:space-between; margin:15px 0"><div>${dataTemp.dep}<br><b>${dataTemp.date}</b><br>${dataTemp.heure}</div><div style="text-align:right">${dataTemp.dest}<br><b>${dataTemp.date}</b><br>${dataTemp.arrivee}</div></div>
+    <p>Passager: ${dataTemp.nom}</p><p>Siège: ${dataTemp.siege}</p><p>N°: ${dataTemp.num}</p><p>Statut: ${dataTemp.statut}</p>
+    <div style="background:white; padding:10px; text-align:center; border-radius:10px"><img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${dataTemp.num}"></div>
+  `;
+  go('billet');
+}
+
+// EXPEDITION
+function expedier(){
+  let num='SDV-'+Math.floor(10000+Math.random()*90000);
+  let colis={num:num,exp:expNom.value,dest:destNom.value,ville:expTel.value+' → '+destVille.value,statut:'En transit',type:'colis'};
+  let colisList=JSON.parse(localStorage.getItem('sdv_colis'))||[]; colisList.push(colis); localStorage.setItem('sdv_colis',JSON.stringify(colisList));
+  alert('Expédition '+num+' enregistrée avec succès'); go('accueil');
+}
+
+// SUIVI
+function chercherColis(){
+  let colisList=JSON.parse(localStorage.getItem('sdv_colis'))||[];
+  let found=colisList.find(c=>c.num==numSuivi.value);
+  document.getElementById('resultatSuivi').innerHTML=found?`<b>${found.num}</b><br><span style="color:orange">${found.statut}</span><br>${found.ville}`:'Aucun colis trouvé';
+}
+
+// HISTORIQUE
+function afficherHistorique(){
+  let billets=JSON.parse(localStorage.getItem('sdv_billets'))||[];
+  let html='';
+  if(billets.length==0) html='<p style="padding:20px">Aucune réservation</p>';
+  else billets.forEach(d=>{
+    html+=`<div class="card" onclick="dataTemp=${JSON.stringify(d).replace(/"/g,'&quot;')};voirBillet()"><div><b>${d.num}</b><br><small>${d.dep} → ${d.dest}</small></div><div style="color:green">${d.statut}</div></div>`;
+  });
+  document.getElementById('listeHistorique').innerHTML=html;
+}
+
+document.getElementById('date').valueAsDate = new Date();
 lucide.createIcons();
 </script>
 </body>
-                                                                                                                                              </html>
+      </html>
