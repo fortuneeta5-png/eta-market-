@@ -28,10 +28,16 @@
   .card i{background:#FFF1E6; color:var(--orange); padding:10px; border-radius:10px}
   .card small{color:#777}
   
-  .topbar{display:flex; align-items:center; padding:15px; border-bottom:1px solid #eee; background:white}
+  .topbar{display:flex; align-items:center; padding:15px; border-bottom:1px solid #eee; background:white; position:sticky; top:0}
   .topbar h2{flex:1; text-align:center; font-size:18px}
   
-  .btn{width:calc(100% - 30px); margin:15px; padding:16px; background:var(--orange); color:white; border:none; border-radius:12px; font-weight:600; font-size:16px}
+  .input{padding:15px} .input label{font-size:12px; color:#777}
+  .input input{width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; margin-top:5px}
+  
+  .btn{width:calc(100% - 30px); margin:15px; padding:16px; background:var(--orange); color:white; border:none; border-radius:12px; font-weight:600; font-size:16px; cursor:pointer}
+  
+  .resultat{display:flex; justify-content:space-between; align-items:center; padding:15px; margin:10px 15px; background:white; border-radius:12px; cursor:pointer}
+  .resultat .prix{color:var(--orange); font-weight:700; font-size:18px}
   
   .nav{position:fixed; bottom:0; width:100%; max-width:420px; background:white; display:flex; justify-content:space-around; padding:8px 0; border-top:1px solid #eee}
   .nav div{text-align:center; font-size:11px; color:#777; cursor:pointer}
@@ -40,32 +46,24 @@
 </head>
 <body>
 
-<!-- PAGE 1 ACCUEIL -->
+<!-- 1 ACCUEIL -->
 <div id="accueil" class="screen">
   <div class="header">
     <div class="logo"><img src="sdv_logo.png"><div><h1>Saint-Denis Voyage</h1><p>Voyagez en toute confiance</p></div></div>
     <i data-lucide="bell"></i>
   </div>
-  
   <div class="slider">
     <div class="slides" id="slides">
-      <div class="slide"><img src="slide1.jpg"></div>
-      <div class="slide"><img src="slide2.jpg"></div>
-      <div class="slide"><img src="slide3.jpg"></div>
-      <div class="slide"><img src="slide4.jpg"></div>
-      <div class="slide"><img src="slide5.jpg"></div>
-      <div class="slide"><img src="slide6.jpg"></div>
-      <div class="slide"><img src="slide7.jpg"></div>
-      <div class="slide"><img src="slide8.jpg"></div>
+      <div class="slide"><img src="slide1.jpg"></div><div class="slide"><img src="slide2.jpg"></div><div class="slide"><img src="slide3.jpg"></div>
+      <div class="slide"><img src="slide4.jpg"></div><div class="slide"><img src="slide5.jpg"></div><div class="slide"><img src="slide6.jpg"></div>
+      <div class="slide"><img src="slide7.jpg"></div><div class="slide"><img src="slide8.jpg"></div>
     </div>
     <div class="dots" id="dots"></div>
   </div>
-
   <div class="card" onclick="go('reservation')"><i data-lucide="ticket"></i><div><b>Réserver un billet</b><br><small>Voyagez en toute simplicité</small></div></div>
   <div class="card" onclick="go('expedier')"><i data-lucide="package"></i><div><b>Expédier un colis</b><br><small>Envoi rapide et sécurisé</small></div></div>
   <div class="card" onclick="go('suivi')"><i data-lucide="truck"></i><div><b>Suivre un colis</b><br><small>Suivi en temps réel</small></div></div>
   <div class="card" onclick="go('agences')"><i data-lucide="map-pin"></i><div><b>Nos agences</b><br><small>Trouvez une agence</small></div></div>
-
   <div class="nav">
     <div class="active" onclick="go('accueil')"><i data-lucide="home"></i><div>Accueil</div></div>
     <div onclick="go('reservation')"><i data-lucide="ticket"></i><div>Réserver</div></div>
@@ -75,66 +73,79 @@
   </div>
 </div>
 
-<!-- PAGE 2 RESERVATION -->
+<!-- 2 RESERVATION -->
 <div id="reservation" class="screen hidden">
   <div class="topbar"><i data-lucide="arrow-left" onclick="go('accueil')"></i><h2>Réservation</h2></div>
-  <div style="padding:15px"><label>Ville départ</label><input id="dep" value="Pointe-Noire" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px"></div>
-  <div style="padding:15px"><label>Destination</label><input id="dest" value="Yaoundé" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px"></div>
-  <div style="padding:15px"><label>Date</label><input id="date" type="date" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px"></div>
-  <button class="btn" onclick="alert('Recherche lancée')">Rechercher</button>
+  <div class="input"><label>Ville de départ</label><input id="dep" value="Pointe-Noire"></div>
+  <div class="input"><label>Destination</label><input id="dest" value="Yaoundé"></div>
+  <div class="input"><label>Date de départ</label><input id="date" type="date"></div>
+  <div class="input"><label>Passagers</label><input value="1 passager"></div>
+  <button class="btn" onclick="cher()">Recher</button>
 </div>
 
-<!-- PAGE 3 SUIVI -->
-<div id="suivi" class="screen hidden">
-  <div class="topbar"><i data-lucide="arrow-left" onclick="go('accueil')"></i><h2>Suivre un colis</h2></div>
-  <div style="padding:15px"><input placeholder="SDV-2026-4829" style="width:70%; padding:10px; border:1px solid #ddd; border-radius:8px"><button class="btn" style="width:25%; display:inline" onclick="alert('Recherche colis')">Recher</button></div>
+<!-- 3 RESULTATS -->
+<div id="resultats" class="screen hidden">
+  <div class="topbar"><i data-lucide="arrow-left" onclick="go('reservation')"></i><h2>Résultats</h2></div>
+  <p id="resume" style="padding:15px"></p>
+  <div class="resultat" onclick="go('infos')"><div><img src="sdv_logo.png" style="width:25px"> SDV<br><b>07:00</b> → <b>18:00</b><br><small>Avec hébergement</small></div><div class="prix">76 000<br><small>FCFA</small></div></div>
+  <div class="resultat" onclick="go('infos')"><div><img src="sdv_logo.png" style="width:25px"> SDV<br><b>12:00</b> → <b>23:00</b><br><small>Avec hébergement</small></div><div class="prix">76 000<br><small>FCFA</small></div></div>
+  <button class="btn" onclick="go('infos')">Continuer</button>
 </div>
 
-<!-- PAGE 4 EXPEDIER -->
-<div id="expedier" class="screen hidden">
-  <div class="topbar"><i data-lucide="arrow-left" onclick="go('accueil')"></i><h2>Expédier un colis</h2></div>
-  <div style="padding:15px"><input placeholder="Nom expéditeur" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; margin-bottom:10px"></div>
-  <div style="padding:15px"><input placeholder="Nom destinataire" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; margin-bottom:10px"></div>
-  <button class="btn" onclick="alert('Expédition enregistrée')">Étape suivante</button>
+<!-- 4 INFOS -->
+<div id="infos" class="screen hidden">
+  <div class="topbar"><i data-lucide="arrow-left" onclick="go('resultats')"></i><h2>Informations passager</h2></div>
+  <div class="input"><label>Nom et prénom</label><input value="Jean Dupont"></div>
+  <div class="input"><label>Téléphone</label><input value="+242 06 123 45 67"></div>
+  <div class="input"><label>Email</label><input value="jean@email.com"></div>
+  <p style="padding:15px">Total à payer <b style="color:var(--orange)">76 000 FCFA</b></p>
+  <button class="btn" onclick="go('paiement')">Continuer vers le paiement</button>
 </div>
 
-<!-- PAGE 5 AGENCES -->
-<div id="agences" class="screen hidden">
-  <div class="topbar"><i data-lucide="arrow-left" onclick="go('accueil')"></i><h2>Nos agences</h2></div>
-  <div class="card"><i data-lucide="map-pin"></i><div><b>Brazzaville</b><br><small>31 rue Dongou</small></div></div>
-  <div class="card"><i data-lucide="map-pin"></i><div><b>Kinshasa</b><br><small>Spehou-Plaza</small></div></div>
+<!-- 5 PAIEMENT -->
+<div id="paiement" class="screen hidden">
+  <div class="topbar"><i data-lucide="arrow-left" onclick="go('infos')"></i><h2>Paiement</h2></div>
+  <p style="padding:15px">Choisissez votre méthode de paiement</p>
+  <div class="card"><img src="logo-mtn.png" style="width:30px"> MTN Mobile Money</div>
+  <div class="input"><label>Numéro Mobile Money</label><input value="+242 06 123 45 67"></div>
+  <div class="card"><img src="logo-airtel.png" style="width:30px"> Airtel Money</div>
+  <button class="btn" onclick="go('succes')">Payer maintenant</button>
 </div>
 
-<!-- PAGE 6 HISTORIQUE -->
-<div id="historique" class="screen hidden">
-  <div class="topbar"><h2>Historique</h2></div>
-  <div class="card"><div><b>SDV-48291</b><br><small>Pointe-Noire → Yaoundé</small></div><div style="color:green">Confirmé</div></div>
+<!-- 6 SUCCES -->
+<div id="succes" class="screen hidden">
+  <div class="topbar"><h2>Paiement</h2></div>
+  <div style="text-align:center; padding:40px 20px">
+    <i data-lucide="check-circle" style="color:green; width:70px; height:70px"></i>
+    <h3>Paiement réussi !</h3>
+    <p>Votre billet a été réservé avec succès.<br>N°: SDV-48291</p>
+  </div>
+  <button class="btn" onclick="go('accueil')">Retour à l'accueil</button>
 </div>
 
-<!-- PAGE 7 CONTACT -->
-<div id="contact" class="screen hidden">
-  <div class="topbar"><i data-lucide="arrow-left" onclick="go('accueil')"></i><h2>Contact</h2></div>
-  <div class="card"><i data-lucide="phone"></i><div><b>Téléphone</b><br><small>+242 05 208 05 52</small></div></div>
-</div>
+<!-- AUTRES PAGES -->
+<div id="suivi" class="screen hidden"><div class="topbar"><i data-lucide="arrow-left" onclick="go('accueil')"></i><h2>Suivre un colis</h2></div><div class="input"><input placeholder="SDV-2026-4829"></div><button class="btn">Rechercher</button></div>
+<div id="expedier" class="screen hidden"><div class="topbar"><i data-lucide="arrow-left" onclick="go('accueil')"></i><h2>Expédier un colis</h2></div><div class="input"><input placeholder="Nom expéditeur"></div><div class="input"><input placeholder="Nom destinataire"></div><button class="btn">Étape suivante</button></div>
+<div id="agences" class="screen hidden"><div class="topbar"><i data-lucide="arrow-left" onclick="go('accueil')"></i><h2>Nos agences</h2></div><div class="card"><i data-lucide="map-pin"></i><div><b>Brazzaville</b><br><small>31 rue Dongou</small></div></div><div class="card"><i data-lucide="map-pin"></i><div><b>Kinshasa</b><br><small>Spehou-Plaza</small></div></div></div>
+<div id="historique" class="screen hidden"><div class="topbar"><h2>Historique</h2></div><div class="card"><div><b>SDV-48291</b><br><small>PNR → YDE</small></div><div style="color:green">Confirmé</div></div></div>
+<div id="contact" class="screen hidden"><div class="topbar"><i data-lucide="arrow-left" onclick="go('accueil')"></i><h2>Contact</h2></div><div class="card"><i data-lucide="phone"></i><div><b>Téléphone</b><br><small>+242 05 208 05 52</small></div></div></div>
 
 <script>
-// FONCTION POUR CHANGER DE PAGE
 function go(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
   document.querySelectorAll('.nav div').forEach(n=>n.classList.remove('active'));
+  if(id=='accueil')document.querySelector('.nav div').classList.add('active');
   lucide.createIcons();
 }
-
-// SLIDER AUTO
-let i=0; 
-for(let j=0;j<8;j++)dots.innerHTML+='<div class="dot"></div>';
-setInterval(()=>{
-  slides.style.transform='translateX('+(-i*100)+'%)';
-  document.querySelectorAll('.dot').forEach((d,k)=>d.classList.toggle('active',k==i));
-  i=(i+1)%8;
-},3000);
+function chercher(){
+  document.getElementById('resume').innerHTML=`<b>${dep.value} → ${dest.value}</b><br><small>${date.value} • 1 passager</small>`;
+  go('resultats');
+}
+// SLIDER
+let i=0; for(let j=0;j<8;j++)dots.innerHTML+='<div class="dot"></div>';
+setInterval(()=>{slides.style.transform='translateX('+(-i*100)+'%)';document.querySelectorAll('.dot').forEach((d,k)=>d.classList.toggle('active',k==i));i=(i+1)%8;},4000);
 lucide.createIcons();
 </script>
 </body>
-  </html>
+                                                                                                                                              </html>
