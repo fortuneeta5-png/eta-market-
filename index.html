@@ -2,69 +2,104 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Saint-Denis Voyage SDV</title>
+<title>Saint-Denis Voyage</title>
 <script src="https://unpkg.com/lucide@latest"></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{--orange:#FF6B00; --gris:#F5F5F5; --texte:#222}
-  *{box-sizing:border-box; margin:0; padding:0}
-  body{font-family:Poppins, sans-serif; background:var(--gris); color:var(--texte)}
-  .screen{max-width:420px; margin:auto; background:white; min-height:100vh; padding-bottom:80px}
+  :root{--orange:#FF6B00; --gris:#F5F5F5; --gris-clair:#F0F0F0; --texte:#222; --gris-texte:#777}
+  *{box-sizing:border-box; margin:0; padding:0; font-family:Poppins, sans-serif}
+  body{background:var(--gris)}
+  .screen{max-width:420px; margin:auto; background:white; min-height:100vh; padding-bottom:80px; position:relative}
   .hidden{display:none}
+  .status-bar{display:flex; justify-content:space-between; padding:5px 15px; font-size:12px; font-weight:500}
   
-  .header-orange{background:var(--orange); color:white; padding:20px; border-radius:0 0 25px 25px}
-  .header-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:15px}
-  .logo-sdv{background:white; border-radius:50%; padding:8px; width:80px; height:80px; margin:10px auto; display:flex; align-items:center; justify-content:center}
-  .header-orange h1{font-size:22px; text-align:center}
-  .header-orange p{text-align:center; font-size:13px; opacity:0.9}
-  .banner{background:white; color:var(--orange); border-radius:15px; padding:15px; margin-top:15px; display:flex; justify-content:space-between; align-items:center}
+  /* HEADER ACCUEIL */
+  .header-accueil{padding:15px; display:flex; justify-content:space-between; align-items:center}
+  .logo-sdv{display:flex; align-items:center; gap:10px}
+  .logo-sdv img{width:40px; height:40px}
+  .logo-sdv h1{font-size:18px; color:var(--orange)} .logo-sdv p{font-size:11px; color:var(--gris-texte)}
   
-  .menu-item{display:flex; align-items:center; gap:15px; padding:18px 20px; background:white; margin:10px 15px; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,0.05); cursor:pointer}
-  .menu-item i{color:var(--orange)}
-  
-  .header-blanc{display:flex; align-items:center; gap:15px; padding:15px 20px; background:white; border-bottom:1px solid #eee; position:sticky; top:0}
-  .header-blanc h2{color:var(--orange); font-size:18px; flex:1; text-align:center}
-  
-  .form-group{background:white; padding:15px 20px; margin-bottom:8px}
-  .form-group label{font-size:12px; color:#888}
-  .form-group input, .form-group select{width:100%; border:none; font-size:16px; padding:8px 0; outline:none; background:transparent}
-  .btn-orange{width:calc(100% - 40px); margin:20px; padding:16px; background:var(--orange); color:white; border:none; border-radius:12px; font-weight:600; font-size:16px}
+  /* BANDEAU SLIDER */
+  .bandeau{position:relative; margin:10px 15px; border-radius:15px; overflow:hidden; height:150px; background:var(--orange)}
+  .bandeau-content{display:flex; align-items:center; justify-content:space-between; padding:15px; height:100%; position:absolute; width:100%; color:white; z-index:2}
+  .bandeau-text b{font-size:16px} .bandeau-text small{font-size:10px}
+  .slides{position:absolute; width:100%; height:100%; display:flex; transition:transform 0.6s ease-in-out}
+  .slide{min-width:100%; height:100%} .slide img{width:100%; height:100%; object-fit:cover; opacity:0.7}
+  .dots{position:absolute; bottom:8px; left:50%; transform:translateX(-50%); display:flex; gap:5px; z-index:3}
+  .dot{width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,0.5)}
+  .dot.active{background:white}
+
+  /* CARTES MENU */
+  .menu-card{display:flex; align-items:center; gap:15px; padding:15px 20px; background:white; margin:10px 15px; border-radius:12px; box-shadow:0 1px 2px rgba(0,0,0,0.05)}
+  .menu-card i{background:#FFF1E6; color:var(--orange); padding:10px; border-radius:10px}
+  .menu-card small{color:var(--gris-texte)}
+
+  /* HEADER BLANC */
+  .header-page{display:flex; align-items:center; gap:15px; padding:15px 20px; background:white; border-bottom:1px solid var(--gris-clair)}
+  .header-page h2{flex:1; text-align:center; font-size:18px; color:var(--texte)}
+  .header-page i{color:var(--texte)}
+
+  /* FORMULAIRE */
+  .form-item{padding:15px 20px; background:white; border-bottom:1px solid var(--gris-clair)}
+  .form-item label{font-size:12px; color:var(--gris-texte)}
+  .form-item input{width:100%; border:none; padding:8px 0; font-size:15px; outline:none}
+  .btn{width:calc(100% - 40px); margin:20px; padding:16px; background:var(--orange); color:white; border:none; border-radius:12px; font-weight:600; font-size:16px}
   .btn-outline{width:calc(100% - 40px); margin:0 20px 20px; padding:15px; background:white; color:var(--orange); border:2px solid var(--orange); border-radius:12px; font-weight:600}
   
-  .card-resultat{background:white; padding:15px 20px; margin:10px 15px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.05)}
-  .prix{color:var(--orange); font-weight:700; font-size:18px}
+  /* RESULTATS */
+  .resultat-card{display:flex; justify-content:space-between; align-items:center; padding:15px 20px; margin:10px 15px; background:white; border-radius:12px}
+  .resultat-card .prix{color:var(--orange); font-weight:700; font-size:18px}
+  .dest-pop{padding:15px 20px} .dest-pop .item{display:flex; align-items:center; gap:10px; padding:10px 0}
   
-  .nav{position:fixed; bottom:0; left:0; right:0; max-width:420px; margin:auto; background:white; display:flex; justify-content:space-around; padding:10px 0; border-top:1px solid #eee}
-  .nav-item{text-align:center; color:#888; cursor:pointer; font-size:11px}.nav-item.active{color:var(--orange)}
-  .nav-item i{margin-bottom:3px}
-  .tab-btn{flex:1; padding:10px; border:none; border-radius:20px; margin:0 5px}
+  /* PAIEMENT */
+  .methode{padding:15px 20px; display:flex; align-items:center; gap:15px; background:white; margin:10px 15px; border-radius:12px; border:1px solid var(--gris-clair)}
+  .methode img{width:30px}
+  .recap{padding:15px 20px; background:white; margin:10px 15px; border-radius:12px}
+  
+  /* NAV */
+  .nav{position:fixed; bottom:0; left:0; right:0; max-width:420px; margin:auto; background:white; display:flex; justify-content:space-around; padding:8px 0; border-top:1px solid var(--gris-clair)}
+  .nav-item{text-align:center; color:var(--gris-texte); font-size:11px} .nav-item.active{color:var(--orange)}
+  .nav-item i{width:22px; height:22px; margin-bottom:3px}
+  .tab{display:flex; padding:10px 15px; gap:10px} .tab-btn{flex:1; padding:8px; border:none; border-radius:20px; background:var(--gris-clair)}
+  .tab-btn.active{background:var(--orange); color:white}
+  .billet{background:var(--orange); color:white; margin:20px; padding:20px; border-radius:15px}
 </style>
 </head>
 <body>
 
 <!-- 1. ACCUEIL -->
 <div id="accueil" class="screen">
-  <div class="header-orange">
-    <div class="header-top"><i data-lucide="menu"></i><i data-lucide="bell"></i></div>
-    <!-- LOGO SDV INTEGRE -->
+  <div class="status-bar"><span>9:41</span><span><i data-lucide="wifi" size="14"></i> <i data-lucide="battery" size="14"></i></span></div>
+  <div class="header-accueil">
     <div class="logo-sdv">
-      <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#FF6B00"/><text x="50" y="58" text-anchor="middle" fill="white" font-size="24" font-weight="bold">SDV</text></svg>
+      <img src="/mnt/data/wa_image_1167779457668137929"> <!-- TON LOGO SDV -->
+      <div><h1>Saint-Denis Voyage</h1><p>Voyagez en toute confiance</p></div>
     </div>
-    <h1>Saint-Denis Voyage</h1>
-    <p>Votre partenaire en voyage d'affaires</p>
-    <div class="banner">
-      <div><b>DU CAMEROUN<br>AU CONGO !</b><br><small>AVEC LES TARIFS<br>HORS CONCURRENCE</small></div>
-      <!-- BUS INTEGRE -->
-      <svg width="90" height="50" viewBox="0 0 90 50"><rect x="5" y="15" width="80" height="25" rx="5" fill="#FF6B00"/><rect x="10" y="20" width="15" height="10" fill="white"/><rect x="30" y="20" width="15" height="10" fill="white"/><rect x="50" y="20" width="15" height="10" fill="white"/><circle cx="20" cy="42" r="6" fill="#333"/><circle cx="70" cy="42" r="6" fill="#333"/></svg>
-    </div>
+    <i data-lucide="bell"></i>
   </div>
-  <div class="menu-item" onclick="showScreen('reservation')"><i data-lucide="ticket"></i><div><b>Réserver un billet</b><br><small>Voyagez en toute simplicité</small></div></div>
-  <div class="menu-item" onclick="showScreen('expedier1')"><i data-lucide="package"></i><div><b>Expédier un colis</b><br><small>Rapide & sécurisé</small></div></div>
-  <div class="menu-item" onclick="showScreen('suivi')"><i data-lucide="truck"></i><div><b>Suivre un colis</b><br><small>En temps réel</small></div></div>
-  <div class="menu-item" onclick="showScreen('agences')"><i data-lucide="map-pin"></i><div><b>Nos agences</b><br><small>Trouvez une agence</small></div></div>
-  
+  <div class="bandeau">
+    <div class="bandeau-content">
+      <div class="bandeau-text"><b>DU CAMEROUN<br>AU CONGO !</b><br><small>AVEC LES TARIFS<br>HORS CONCURRENCE</small></div>
+    </div>
+    <div class="slides" id="slides">
+      <div class="slide"><img src="/mnt/data/wa_image_6820501397418857117_0"></div>
+      <div class="slide"><img src="/mnt/data/wa_image_6820501397418857117_1"></div>
+      <div class="slide"><img src="/mnt/data/wa_image_6820501397418857117_2"></div>
+      <div class="slide"><img src="/mnt/data/wa_image_6820501397418857117_3"></div>
+      <div class="slide"><img src="/mnt/data/wa_image_6820501397418857117_4"></div>
+      <div class="slide"><img src="/mnt/data/wa_image_6820501397418857117_5"></div>
+      <div class="slide"><img src="/mnt/data/wa_image_6820501397418857117_6"></div>
+      <div class="slide"><img src="/mnt/data/wa_image_6820501397418857117_7"></div>
+      <div class="slide"><img src="/mnt/data/wa_image_6820501397418857117_8"></div>
+    </div>
+    <div class="dots" id="dots"></div>
+  </div>
+  <div class="menu-card" onclick="showScreen('reservation')"><i data-lucide="ticket"></i><div><b>Réserver un billet</b><br><small>Voyagez en toute simplicité</small></div></div>
+  <div class="menu-card" onclick="showScreen('expedier1')"><i data-lucide="package"></i><div><b>Expédier un colis</b><br><small>Envoi rapide et sécurisé</small></div></div>
+  <div class="menu-card" onclick="showScreen('suivi')"><i data-lucide="truck"></i><div><b>Suivre un colis</b><br><small>Suivi en temps réel</small></div></div>
+  <div class="menu-card" onclick="showScreen('agences')"><i data-lucide="map-pin"></i><div><b>Nos agences</b><br><small>Trouvez une agence</small></div></div>
   <div class="nav">
-    <div class="nav-item active"><i data-lucide="home"></i><div>Accueil</div></div>
+    <div class="nav-item active" onclick="showScreen('accueil')"><i data-lucide="home"></i><div>Accueil</div></div>
     <div class="nav-item" onclick="showScreen('reservation')"><i data-lucide="ticket"></i><div>Réserver</div></div>
     <div class="nav-item" onclick="showScreen('suivi')"><i data-lucide="truck"></i><div>Suivi</div></div>
     <div class="nav-item" onclick="showScreen('historique')"><i data-lucide="history"></i><div>Historique</div></div>
@@ -74,158 +109,163 @@
 
 <!-- 2. RESERVATION -->
 <div id="reservation" class="screen hidden">
-  <div class="header-blanc"><i data-lucide="arrow-left" onclick="showScreen('accueil')"></i><h2>Réservation</h2></div>
-  <div style="display:flex; padding:15px 20px">
-    <button class="tab-btn" style="background:var(--orange); color:white">Aller simple</button>
-    <button class="tab-btn" style="background:#eee">Aller retour</button>
+  <div class="status-bar"><span>9:41</span><span><i data-lucide="wifi" size="14"></i> <i data-lucide="battery" size="14"></i></span></div>
+  <div class="header-page"><i data-lucide="arrow-left" onclick="showScreen('accueil')"></i><h2>Réservation</h2></div>
+  <div class="tab"><button class="tab-btn active">Aller simple</button><button class="tab-btn">Aller retour</button></div>
+  <div class="form-item"><label>Ville de départ</label><input id="dep" value="Pointe-Noire"></div>
+  <div class="form-item"><label>Destination</label><input id="dest" value="Yaoundé"></div>
+  <div class="form-item"><label>Date de départ</label><input id="date" type="date" value="2026-08-14"></div>
+  <div class="form-item"><label>Passagers</label><input value="1 passager"></div>
+  <button class="btn" onclick="rechercher()">Rechercher</button>
+  <div class="dest-pop"><b>Destinations populaires</b>
+    <div class="item"><i data-lucide="map-pin" size="16" color="orange"></i><div>Pointe-Noire → Yaoundé<br><small>A partir de 76 000 FCFA</small></div></div>
+    <div class="item"><i data-lucide="map-pin" size="16" color="orange"></i><div>Pointe-Noire → Douala<br><small>A partir de 76 000 FCFA</small></div></div>
+    <div class="item"><i data-lucide="map-pin" size="16" color="orange"></i><div>Kinshasa → Douala<br><small>A partir de 165 USD</small></div></div>
   </div>
-  <div class="form-group"><label>Ville de départ</label><input value="Pointe-Noire"></div>
-  <div class="form-group"><label>Destination</label><input value="Yaoundé"></div>
-  <div class="form-group"><label>Date de départ</label><input type="date" value="2026-08-14"></div>
-  <div class="form-group"><label>Passagers</label><input value="1 passager"></div>
-  <button class="btn-orange" onclick="showScreen('resultats')">Recher</button>
 </div>
 
 <!-- 3. RESULTATS -->
 <div id="resultats" class="screen hidden">
-  <div class="header-blanc"><i data-lucide="arrow-left" onclick="showScreen('reservation')"></i><h2>Résultats</h2></div>
-  <p style="padding:15px 20px"><b>Pointe-Noire → Yaoundé</b><br><small>14 août 2026 • 1 passager</small></p>
-  <div class="card-resultat"><div><b>07:00</b> → <b>18:00</b><br><small>Avec hébergement • 22 places</small></div><div class="prix">76 000<br><small>FCFA</small></div></div>
-  <div class="card-resultat"><div><b>12:00</b> → <b>23:00</b><br><small>Avec hébergement • 18 places</small></div><div class="prix">76 000<br><small>FCFA</small></div></div>
-  <div class="card-resultat"><div><b>20:00</b> → <b>07:00</b><br><small>Avec hébergement • 26 places</small></div><div class="prix">76 000<br><small>FCFA</small></div></div>
-  <button class="btn-orange" onclick="showScreen('infos')">Continuer</button>
+  <div class="status-bar"><span>9:41</span><span><i data-lucide="wifi" size="14"></i> <i data-lucide="battery" size="14"></i></span></div>
+  <div class="header-page"><i data-lucide="arrow-left" onclick="showScreen('reservation')"></i><h2>Résultats</h2></div>
+  <p id="resume" style="padding:15px 20px"></p>
+  <div class="resultat-card" onclick="choisir('07:00','18:00')"><div><img src="/mnt/data/wa_image_1167779457668137929" style="width:30px"> SDV<br><b>07:00</b> 18:00<br><small>Avec hébergement • Sièges: 22</small></div><div class="prix">76 000<br><small>FCFA</small></div></div>
+  <div class="resultat-card" onclick="choisir('12:00','23:00')"><div><img src="/mnt/data/wa_image_1167779457668137929" style="width:30px"> SDV<br><b>12:00</b> 23:00<br><small>Avec hébergement • Sièges: 18</small></div><div class="prix">76 000<br><small>FCFA</small></div></div>
+  <div class="resultat-card" onclick="choisir('20:00','07:00')"><div><img src="/mnt/data/wa_image_1167779457668137929" style="width:30px"> SDV<br><b>20:00</b> 07:00<br><small>Avec hébergement • Sièges: 26</small></div><div class="prix">76 000<br><small>FCFA</small></div></div>
+  <button class="btn" onclick="showScreen('infos')">Continuer</button>
 </div>
 
 <!-- 4. INFOS PASSAGER -->
 <div id="infos" class="screen hidden">
-  <div class="header-blanc"><i data-lucide="arrow-left" onclick="showScreen('resultats')"></i><h2>Informations passager</h2></div>
-  <div class="form-group"><label>Nom et prénom</label><input placeholder="Jean Dupont"></div>
-  <div class="form-group"><label>Numéro de téléphone</label><input placeholder="+242 06 123 45 67"></div>
-  <div class="form-group"><label>Email</label><input placeholder="jean@email.com"></div>
-  <div class="form-group"><label>Siège souhaité</label><input placeholder="12A"></div>
-  <p style="padding:15px 20px"><b>Total à payer : <span style="color:var(--orange)">76 000 FCFA</span></b></p>
-  <button class="btn-orange" onclick="showScreen('paiement')">Continuer vers le paiement</button>
+  <div class="status-bar"><span>9:41</span><span><i data-lucide="wifi" size="14"></i> <i data-lucide="battery" size="14"></i></span></div>
+  <div class="header-page"><i data-lucide="arrow-left" onclick="showScreen('resultats')"></i><h2>Informations passager</h2></div>
+  <div class="form-item"><label>Nom et prénom</label><input id="nom" value="Jean Dupont"></div>
+  <div class="form-item"><label>Numéro de téléphone</label><input id="tel" value="+242 06 123 45 67"></div>
+  <div class="form-item"><label>Email</label><input id="email" value="jean.dupont@email.com"></div>
+  <div class="form-item"><label>Siège souhaité (optionnel)</label><input value="12A"></div>
+  <div class="form-item"><label>Commentaire (optionnel)</label><input value="---"></div>
+  <p style="padding:20px">Total à payer <b style="color:var(--orange)">76 000 FCFA</b></p>
+  <button class="btn" onclick="showScreen('paiement')">Continuer vers le paiement</button>
 </div>
 
 <!-- 5. PAIEMENT -->
 <div id="paiement" class="screen hidden">
-  <div class="header-blanc"><i data-lucide="arrow-left" onclick="showScreen('infos')"></i><h2>Paiement</h2></div>
-  <p style="padding:15px 20px"><b>Choisissez votre méthode de paiement</b></p>
-  <div class="form-group"><label><input type="radio" name="pay" checked> MTN Mobile Money</label><input placeholder="+242 06 123 45 67"></div>
-  <div class="form-group"><label><input type="radio" name="pay"> Airtel Money</label></div>
-  <p style="padding:15px 20px">Trajet: Pointe-Noire → Yaoundé<br>Date: 14 août 2026<br><b>Total : 76 000 FCFA</b></p>
-  <button class="btn-orange" onclick="showScreen('verif')">Payer maintenant</button>
+  <div class="status-bar"><span>9:41</span><span><i data-lucide="wifi" size="14"></i> <i data-lucide="battery" size="14"></i></span></div>
+  <div class="header-page"><i data-lucide="arrow-left" onclick="showScreen('infos')"></i><h2>Paiement</h2></div>
+  <p style="padding:15px 20px">Choisissez votre méthode de paiement</p>
+  <div class="methode"><img src="https://i.imgur.com/yourMTN.png"> MTN Mobile Money <input type="radio" name="p" checked style="margin-left:auto"></div>
+  <div class="form-item"><label>Numéro Mobile Money</label><input value="+242 06 123 45 67"></div>
+  <div class="methode"><img src="https://i.imgur.com/yourAirtel.png"> Airtel Money <input type="radio" name="p" style="margin-left:auto"></div>
+  <div class="recap"><b>Détails du paiement</b><p id="recap"></p><b>Total 76 000 FCFA</b></div>
+  <button class="btn" onclick="payer()">Payer maintenant</button>
 </div>
 
-<!-- 6. VERIFICATION -->
+<!-- 6. VERIF -->
 <div id="verif" class="screen hidden">
-  <div class="header-blanc"><i data-lucide="arrow-left" onclick="showScreen('paiement')"></i><h2>Paiement</h2></div>
+  <div class="status-bar"><span>9:41</span><span><i data-lucide="wifi" size="14"></i> <i data-lucide="battery" size="14"></i></span></div>
+  <div class="header-page"><i data-lucide="arrow-left" onclick="showScreen('paiement')"></i><h2>Paiement</h2></div>
   <div style="text-align:center; padding:40px 20px">
-    <!-- TELEPHONE PAIEMENT SVG -->
-    <svg width="100" height="100" viewBox="0 0 100 100"><rect x="20" y="10" width="60" height="80" rx="10" fill="#eee"/><rect x="25" y="15" width="50" height="60" fill="white"/><path d="M50 80 L60 70 L50 75 L40 70 Z" fill="#FF6B00"/></svg>
+    <img src="https://i.imgur.com/phoneIcon.png" style="width:60px">
     <h3>Vérifiez votre téléphone</h3>
-    <p>Un code de paiement vous a été envoyé.</p>
-    <p style="color:var(--orange); font-size:24px; font-weight:700">76 000 FCFA</p>
-    <p>Temps restant 01:45</p>
+    <p>Un code de paiement vous a été envoyé. Veuillez confirmer la transaction sur votre téléphone.</p>
+    <p><b>Montant</b><br><span style="color:var(--orange); font-size:20px">76 000 FCFA</span></p>
+    <p>Temps restant<br><b>01:45</b></p>
   </div>
-  <button class="btn-orange" onclick="showScreen('succes')">J'ai payé</button>
+  <button class="btn" onclick="succes()">J'ai payé</button>
   <button class="btn-outline">Annuler le paiement</button>
 </div>
 
 <!-- 7. SUCCES -->
 <div id="succes" class="screen hidden">
-  <div class="header-blanc"><h2>Paiement</h2></div>
+  <div class="status-bar"><span>9:41</span><span><i data-lucide="wifi" size="14"></i> <i data-lucide="battery" size="14"></i></span></div>
+  <div class="header-page"><i data-lucide="arrow-left"></i><h2>Paiement</h2></div>
   <div style="text-align:center; padding:40px 20px">
-    <i data-lucide="check-circle" style="color:green; width:80px; height:80px"></i>
+    <i data-lucide="check-circle" style="color:green; width:70px; height:70px"></i>
     <h3>Paiement réussi !</h3>
     <p>Votre billet a été réservé avec succès.</p>
-    <p><b>Montant payé : 76 000 FCFA</b></p>
-    <p>N° de réservation: SDV-48291</p>
+    <p>Montant payé <b>76 000 FCFA</b><br>N° de réservation <b>SDV-48291</b><br>Date <b>13 août 2026 - 09:41</b></p>
   </div>
-  <button class="btn-orange" onclick="showScreen('billet')">Voir mon billet</button>
+  <button class="btn" onclick="showScreen('billet')">Voir mon billet</button>
   <button class="btn-outline" onclick="showScreen('accueil')">Retour à l'accueil</button>
 </div>
 
 <!-- 8. MON BILLET -->
 <div id="billet" class="screen hidden">
-  <div class="header-blanc"><i data-lucide="arrow-left" onclick="showScreen('accueil')"></i><h2>Mon billet</h2></div>
-  <div style="padding:20px; text-align:center">
-    <div class="logo-sdv" style="width:60px; height:60px"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#FF6B00"/><text x="50" y="58" text-anchor="middle" fill="white" font-size="18" font-weight="bold">SDV</text></svg></div>
-    <h3>SAINT-DENIS VOYAGE</h3>
-    <p><b>PNR → YDE</b></p>
-    <p>Départ: 14 août 2026 07:00</p>
-    <p>Arrivée: 14 août 2026 18:00</p>
-    <p>Passager: Jean Dupont • Siège: 12A</p>
-    <p>N°: SDV-48291 • Statut: Confirmé</p>
-    <!-- QR CODE SVG -->
-    <svg width="150" height="150" style="margin:20px"><rect width="150" height="150" fill="white"/>
-      <rect x="10" y="10" width="10" height="10" fill="black"/><rect x="20" y="10" width="10" height="10" fill="black"/>
-      <rect x="40" y="10" width="10" height="10" fill="black"/><rect x="60" y="10" width="10" height="10" fill="black"/>
-      <rect x="80" y="10" width="10" height="10" fill="black"/><rect x="100" y="10" width="10" height="10" fill="black"/>
-      <rect x="120" y="10" width="10" height="10" fill="black"/><rect x="130" y="10" width="10" height="10" fill="black"/>
-      <rect x="10" y="30" width="10" height="10" fill="black"/><rect x="50" y="30" width="10" height="10" fill="black"/>
-      <rect x="90" y="30" width="10" height="10" fill="black"/><rect x="130" y="30" width="10" height="10" fill="black"/>
-    </svg>
-    <p><small>Présentez ce QR code à l'embarquement</small></p>
+  <div class="status-bar"><span>9:41</span><span><i data-lucide="wifi" size="14"></i> <i data-lucide="battery" size="14"></i></span></div>
+  <div class="header-page"><i data-lucide="arrow-left" onclick="showScreen('accueil')"></i><h2>Mon billet</h2><i data-lucide="share-2"></i></div>
+  <div class="billet">
+    <div style="display:flex; justify-content:space-between"><img src="/mnt/data/wa_image_1167779457668137929" style="width:40px"> SAINT-DENIS VOYAGE <small>Aller simple</small></div>
+    <div style="display:flex; justify-content:space-between; margin:15px 0"><div>PNR<br><b>Pointe-Noire</b><br>14 août 2026<br>07:00</div><div style="text-align:right">YDE<br><b>Yaoundé</b><br>14 août 2026<br>18:00</div></div>
+    <p>Passager: Jean Dupont</p><p>Siège: 12A</p><p>N° de billet: SDV-48291</p><p>Statut: <span style="color:#90EE90">Confirmé</span></p>
+    <div style="background:white; padding:10px; text-align:center"><img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=SDV48291"></div>
+    <small>Présentez ce QR code à l'embarquement</small>
   </div>
-  <button class="btn-orange">Télécharger le billet</button>
+  <button class="btn">Télécharger le billet</button>
 </div>
 
 <!-- 9. SUIVI -->
-<div id="suivi" class="screen hidden"><div class="header-blanc"><i data-lucide="arrow-left" onclick="showScreen('accueil')"></i><h2>Suivre un colis</h2></div>
-  <div class="form-group"><input placeholder="SDV-2026-4829"></div><button class="btn-orange">Rechercher</button>
-  <div class="menu-item"><b>SDV-2026-4829</b><br><small style="color:orange">En transit</small><br>Brazzaville → Douala</div>
+<div id="suivi" class="screen hidden">
+  <div class="status-bar"><span>9:41</span><span><i data-lucide="wifi" size="14"></i> <i data-lucide="battery" size="14"></i></span></div>
+  <div class="header-page"><i data-lucide="arrow-left" onclick="showScreen('accueil')"></i><h2>Suivre un colis</h2></div>
+  <div class="form-item" style="display:flex"><input placeholder="SDV-2026-4829"><button class="btn" style="width:auto; margin:0; padding:10px 20px">Recher</button></div>
+  <div style="padding:20px"><b>SDV-2026-4829</b><br><span style="color:orange">En transit</span><br>Brazzaville → Douala
+    <p>13 août 2026 - 09:30<br>Colis en transit • Douala</p>
+    <p>12 août 2026 - 17:20<br>Colis pris en charge • Brazzaville</p>
+    <p>12 août 2026 - 10:15<br>Colis enregistré à l'agence • Brazzaville</p>
+  </div>
 </div>
 
 <!-- 10. EXPEDIER 1 -->
-<div id="expedier1" class="screen hidden"><div class="header-blanc"><i data-lucide="arrow-left" onclick="showScreen('accueil')"></i><h2>Expédier un colis</h2></div>
-  <div class="form-group"><label>Expéditeur - Nom complet</label><input placeholder="Jean Dupont"></div>
-  <div class="form-group"><label>Téléphone</label><input placeholder="+242 06 123 45 67"></div>
-  <div class="form-group"><label>Ville de départ</label><input placeholder="Brazzaville"></div>
-  <div class="form-group"><label>Destinataire - Nom complet</label><input placeholder="Michel Kabasole"></div>
-  <div class="form-group"><label>Ville de destination</label><input placeholder="Douala"></div>
-  <button class="btn-orange" onclick="showScreen('expedier2')">Étape suivante</button>
+<div id="expedier1" class="screen hidden">
+  <div class="status-bar"><span>9:41</span><span><i data-lucide="wifi" size="14"></i> <i data-lucide="battery" size="14"></i></span></div>
+  <div class="header-page"><i data-lucide="arrow-left" onclick="showScreen('accueil')"></i><h2>Expédier un colis</h2></div>
+  <p style="padding:15px 20px; color:var(--orange)"><b>Expéditeur</b></p>
+  <div class="form-item"><label>Nom complet</label><input value="Jean Dupont"></div>
+  <div class="form-item"><label>Téléphone</label><input value="+242 06 123 45 67"></div>
+  <div class="form-item"><label>Ville de départ</label><input value="Brazzaville"></div>
+  <p style="padding:15px 20px; color:var(--orange)"><b>Destinataire</b></p>
+  <div class="form-item"><label>Nom complet</label><input value="Michel Kabasole"></div>
+  <div class="form-item"><label>Téléphone</label><input value="+243 81 233 39 02"></div>
+  <div class="form-item"><label>Ville de destination</label><input value="Douala"></div>
+  <button class="btn" onclick="showScreen('expedier2')">Étape suivante</button>
 </div>
 
 <!-- 11. EXPEDIER 2 -->
-<div id="expedier2" class="screen hidden"><div class="header-blanc"><i data-lucide="arrow-left" onclick="showScreen('expedier1')"></i><h2>Expédier un colis</h2></div>
-  <div class="form-group"><label>Poids du colis (Kg)</label><input placeholder="5"></div>
-  <div class="form-group"><label>Description</label><input placeholder="Vêtements"></div>
-  <div class="form-group"><label>Valeur déclarée</label><input placeholder="50 000 FCFA"></div>
-  <div class="form-group"><label>Type de livraison</label><input placeholder="Express 48h"></div>
-  <button class="btn-orange">Confirmer l'expédition</button>
+<div id="expedier2" class="screen hidden">
+  <div class="status-bar"><span>9:41</span><span><i data-lucide="wifi" size="14"></i> <i data-lucide="battery" size="14"></i></span></div>
+  <div class="header-page"><i data-lucide="arrow-left" onclick="showScreen('expedier1')"></i><h2>Expédier un colis</h2></div>
+  <div class="form-item"><label>Poids du colis (Kg)</label><input value="5"></div>
+  <div class="form-item"><label>Description du colis</label><input value="Vêtements"></div>
+  <div class="form-item"><label>Valeur déclarée (FCFA)</label><input value="50 000"></div>
+  <div class="form-item"><label>Type de livraison</label><input value="Express (48h)"></div>
+  <div class="form-item"><label>Instructions (optionnel)</label><input placeholder="Instructions spéciales"></div>
+  <button class="btn">Confirmer l'expédition</button>
 </div>
 
 <!-- 12. AGENCES -->
-<div id="agences" class="screen hidden"><div class="header-blanc"><i data-lucide="arrow-left" onclick="showScreen('accueil')"></i><h2>Nos agences</h2></div>
-  <div class="menu-item"><div><b>Brazzaville (Direction)</b><br>31 rue Dongou, Ouenzé<br>+242 05 208 05 52</div></div>
-  <div class="menu-item"><div><b>Kinshasa</b><br>Spehou-Plaza, Bandal<br>+243 081 233 39 02</div></div>
-  <div class="menu-item"><div><b>Douala</b><br>Agence FINEXS, La Douche<br>+237 678 602 390</div></div>
-  <div class="menu-item"><div><b>Yaoundé</b><br>Agence FINEXS, MVAN<br>+237 654 393 547</div></div>
+<div id="agences" class="screen hidden">
+  <div class="status-bar"><span>9:41</span><span><i data-lucide="wifi" size="14"></i> <i data-lucide="battery" size="14"></i></span></div>
+  <div class="header-page"><i data-lucide="arrow-left" onclick="showScreen('accueil')"></i><h2>Nos agences</h2></div>
+  <div class="menu-card"><i data-lucide="map-pin"></i><div><b>Brazzaville (Direction)</b><br>31 rue Dongou, Ouenzé<br>+242 05 208 05 52</div></div>
+  <div class="menu-card"><i data-lucide="map-pin"></i><div><b>Kinshasa</b><br>Spehou-Plaza, Bandal<br>+243 081 233 39 02</div></div>
+  <div class="menu-card"><i data-lucide="map-pin"></i><div><b>Douala</b><br>Agence FINEXS, La Douche<br>+237 678 602 390</div></div>
+  <div class="menu-card"><i data-lucide="map-pin"></i><div><b>Yaoundé</b><br>Agence FINEXS, MVAN<br>+237 654 393 547</div></div>
 </div>
 
 <!-- 13. HISTORIQUE -->
-<div id="historique" class="screen hidden"><div class="header-blanc"><h2>Historique</h2></div>
-  <div style="display:flex; padding:15px"><button class="tab-btn" style="background:var(--orange); color:white">Réservations</button><button class="tab-btn" style="background:#eee">Expéditions</button></div>
-  <div class="menu-item"><div><b>SDV-48291</b><br>PNR → YDE • 76 000 FCFA</div><div style="color:green">Confirmé</div></div>
-  <div class="menu-item"><div><b>SDV-31962</b><br>PNR → DLA • 79 000 FCFA</div><div style="color:green">Confirmé</div></div>
+<div id="historique" class="screen hidden">
+  <div class="status-bar"><span>9:41</span><span><i data-lucide="wifi" size="14"></i> <i data-lucide="battery" size="14"></i></span></div>
+  <div class="header-page"><h2>Historique</h2></div>
+  <div class="tab"><button class="tab-btn active">Réservations</button><button class="tab-btn">Expéditions</button></div>
+  <div class="menu-card"><div><b>SDV-48291</b><br>Pointe-Noire → Yaoundé<br>76 000 FCFA</div><div style="color:green">Confirmé</div></div>
+  <div class="menu-card"><div><b>SDV-31982</b><br>Pointe-Noire → Douala<br>79 000 FCFA</div><div style="color:green">Confirmé</div></div>
+  <div class="menu-card"><div><b>SDV-27601</b><br>Kinshasa → Douala<br>165 USD</div><div style="color:red">Annulé</div></div>
 </div>
 
 <!-- 14. CONTACT -->
-<div id="contact" class="screen hidden"><div class="header-blanc"><i data-lucide="arrow-left" onclick="showScreen('accueil')"></i><h2>Contactez-nous</h2></div>
-  <div class="menu-item"><i data-lucide="phone"></i><div><b>Téléphone</b><br>+242 05 208 05 52</div></div>
-  <div class="menu-item"><i data-lucide="message-circle"></i><div><b>WhatsApp</b><br>+242 05 208 05 52</div></div>
-  <div class="menu-item"><i data-lucide="mail"></i><div><b>Email</b><br>sdv@oufholding.cg</div></div>
-  <div class="menu-item"><i data-lucide="clock"></i><div><b>Heures d'ouverture</b><br>Lun - Dim: 06h00 - 20h00</div></div>
-</div>
-
-<script>
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-  document.getElementById(id).classList.remove('hidden');
-  lucide.createIcons();
-}
-lucide.createIcons();
-</script>
-</body>
-  </html>
+<div id="contact" class="screen hidden">
+  <div class="status-bar"><span>9:41</span><span><i data-lucide="wifi" size="14"></i> <i data-lucide="battery" size="14"></i></span></div>
+  <div class="header-page"><i data-lucide="arrow-left" onclick="showScreen('accueil')"></i><h2>Contactez-nous</h2></div>
+  <div class="menu-card"><i data-lucide="phone"></i><div><b>Téléphone</b><br>+242 05 208 05 52<br>Disponible 7j/7</div></div>
+  <div class="menu-card"><i data-lucide="message-circle"></i><div><b>WhatsApp</b><br>+242 05 208 05 52<br>Réponse rapide</div></div>
+  <div class="menu-card"><i data-lucide="mail"></i><div><b>Email</b><br>sdv@oufholding.cg<br>Réponse sous 24h</div
